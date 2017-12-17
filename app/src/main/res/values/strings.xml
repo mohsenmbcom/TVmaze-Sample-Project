@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TVmaze sample project</string>
+    <string name="you_are_offline">You are offline!\nCheck your connection settings</string>
+    <string name="cant_connect_to_server">Cannot connect to server!\nPlease try again</string>
+    <string name="retry">Retry</string>
+    <string name="problem_on_connecting_to_server">Problem on connecting to the server</string>
+</resources>
