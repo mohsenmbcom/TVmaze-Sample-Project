@@ -18,7 +18,7 @@ public class TvMazeApplication extends Application {
         component = createComponent();
     }
 
-    private MainComponent createComponent() {
+    public MainComponent createComponent() {
         return DaggerMainComponent
                 .builder()
                 .build();
