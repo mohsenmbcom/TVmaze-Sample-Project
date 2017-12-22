@@ -1,6 +1,7 @@
 package com.mohsenmb.tvmazesampleproject.di.component;
 
 import com.mohsenmb.apimodule.di.module.ApiModule;
+import com.mohsenmb.apimodule.di.module.ShowDetailsModule;
 import com.mohsenmb.apimodule.di.module.ShowsListModule;
 
 import javax.inject.Singleton;
@@ -13,4 +14,6 @@ import dagger.Component;
 })
 public interface MainComponent {
     ShowsListComponent plus(ShowsListModule module);
+
+    ShowDetailsComponent plus(ShowDetailsModule module);
 }

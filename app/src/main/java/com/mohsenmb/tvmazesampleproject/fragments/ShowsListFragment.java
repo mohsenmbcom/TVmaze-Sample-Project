@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +29,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ShowsListFragment extends Fragment implements ShowsListView {
+public class ShowsListFragment extends Fragment implements ShowsListView, ShowsListAdapter.ShowItemClickListener {
 
     @Inject
     ShowsListPresenter presenter;
@@ -59,6 +62,10 @@ public class ShowsListFragment extends Fragment implements ShowsListView {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         srlShows = view.findViewById(R.id.srlShows);
         srlShows.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -73,6 +80,7 @@ public class ShowsListFragment extends Fragment implements ShowsListView {
             showsList = new ArrayList<>();
         }
         showsListAdapter = new ShowsListAdapter(showsList);
+        showsListAdapter.setShowItemClickListener(this);
         rvShows.setAdapter(showsListAdapter);
         final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         rvShows.setLayoutManager(layoutManager);
@@ -118,11 +126,13 @@ public class ShowsListFragment extends Fragment implements ShowsListView {
     @Override
     public void showOfflineMessage() {
         showMessage(getString(R.string.you_are_offline));
+        showRetry();
     }
 
     @Override
     public void showConnectionError() {
         showMessage(getString(R.string.cant_connect_to_server));
+        showRetry();
     }
 
     @Override
@@ -160,5 +170,20 @@ public class ShowsListFragment extends Fragment implements ShowsListView {
         } else {
             lastPage = true;
         }
+    }
+
+    @Override
+    public void onShowItemClicked(View view, Show show, int position) {
+        ShowDetailsFragment showDetailsFragment = new ShowDetailsFragment();
+        Bundle args = new Bundle();
+        args.putInt(ShowDetailsFragment.ARG_SHOW_ID, show.getId());
+        showDetailsFragment.setArguments(args);
+        getActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.container, showDetailsFragment)
+                .addToBackStack(ShowDetailsFragment.class.getName())
+                .commit();
     }
 }

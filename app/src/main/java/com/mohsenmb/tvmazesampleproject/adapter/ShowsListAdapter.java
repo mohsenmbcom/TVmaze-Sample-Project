@@ -17,6 +17,7 @@ import java.util.List;
 public class ShowsListAdapter extends RecyclerView.Adapter<ShowsListAdapter.ShowsListViewHolder> {
 
     private List<Show> showItems;
+    private ShowItemClickListener showItemClickListener;
 
     public ShowsListAdapter(List<Show> showItems) {
         this.showItems = showItems;
@@ -29,7 +30,7 @@ public class ShowsListAdapter extends RecyclerView.Adapter<ShowsListAdapter.Show
     }
 
     @Override
-    public void onBindViewHolder(ShowsListViewHolder holder, int position) {
+    public void onBindViewHolder(final ShowsListViewHolder holder, int position) {
         Show show = showItems.get(position);
 
         Context context = holder.imgShowCover.getContext();
@@ -46,6 +47,16 @@ public class ShowsListAdapter extends RecyclerView.Adapter<ShowsListAdapter.Show
         }
 
         holder.tvShowTitle.setText(show.getName());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (showItemClickListener != null) {
+                    Show clickedShow = showItems.get(holder.getAdapterPosition());
+                    showItemClickListener.onShowItemClicked(view, clickedShow, holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -64,6 +75,14 @@ public class ShowsListAdapter extends RecyclerView.Adapter<ShowsListAdapter.Show
         this.showItems = showItems;
     }
 
+    public ShowItemClickListener getShowItemClickListener() {
+        return showItemClickListener;
+    }
+
+    public void setShowItemClickListener(ShowItemClickListener showItemClickListener) {
+        this.showItemClickListener = showItemClickListener;
+    }
+
     public static class ShowsListViewHolder extends RecyclerView.ViewHolder {
         TextView tvShowTitle;
         ImageView imgShowCover;
@@ -73,5 +92,9 @@ public class ShowsListAdapter extends RecyclerView.Adapter<ShowsListAdapter.Show
             tvShowTitle = itemView.findViewById(R.id.tvShowTitle);
             imgShowCover = itemView.findViewById(R.id.imgShowCover);
         }
+    }
+
+    public interface ShowItemClickListener {
+        void onShowItemClicked(View view, Show show, int position);
     }
 }

@@ -4,4 +4,5 @@
     <string name="cant_connect_to_server">Cannot connect to server!\nPlease try again</string>
     <string name="retry">Retry</string>
     <string name="problem_on_connecting_to_server">Problem on connecting to the server</string>
+    <string name="error_loading_show_details">Error on loading show details…</string>
 </resources>
