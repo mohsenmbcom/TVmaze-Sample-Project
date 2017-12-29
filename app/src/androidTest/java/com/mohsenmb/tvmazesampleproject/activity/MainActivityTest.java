@@ -5,7 +5,6 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.mohsenmb.apimodule.service.model.Show;
 import com.mohsenmb.tvmazesampleproject.MainActivity;
 import com.mohsenmb.tvmazesampleproject.R;
 
@@ -14,16 +13,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -35,14 +28,6 @@ public class MainActivityTest {
             // false: do not launch the activity immediately
             false);
 
-    /*@Inject
-    TvMazeApiService apiService;
-
-    @Inject
-    Gson gson;*/
-
-    List<Show> expectedResponse;
-
     @Before
     public void setUp() {
 
@@ -52,34 +37,57 @@ public class MainActivityTest {
     public void testIt() {
 
         mainActivity.launchActivity(new Intent());
+
+        // wait for loading the grid
         try {
-            Thread.sleep(3000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-
+        // scroll to the end of the grid
         onView(withId(R.id.rvShows))
-                .perform(RecyclerViewActions.scrollToPosition(50));
+                .perform(RecyclerViewActions.scrollToPosition(49));
 
-        onView(withId(R.id.rvShows))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(50, click()));
-
+        // wait for the next page loading
         try {
-            Thread.sleep(3000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        // scroll to the end of the grid again
+        onView(withId(R.id.rvShows))
+                .perform(RecyclerViewActions.scrollToPosition(99));
+
+        // wait for the third page loading
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // click on the 122nd item (an item of the third page) to show the details fragment
+        onView(withId(R.id.rvShows))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(122, click()));
+
+        // wait a half of a second :)
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // back to the grid
         pressBack();
 
-        onView(withId(R.id.rvShows))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
-
+        // wait a sec
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        // end of story ;)
     }
 }

@@ -25,14 +25,13 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public TvMazeApiService provideApiService(@Named("retrofit") Retrofit retrofit) {
+    public TvMazeApiService provideApiService(Retrofit retrofit) {
         return retrofit.create(TvMazeApiService.class);
     }
 
 
     @Provides
     @Singleton
-    @Named("retrofit")
     public Retrofit provideRetrofit(@Named("apiBaseUrl") HttpUrl baseUrl, OkHttpClient client, Converter.Factory converterFactory,
                                     CallAdapter.Factory callAdapterFactory) {
         return new Retrofit.Builder()

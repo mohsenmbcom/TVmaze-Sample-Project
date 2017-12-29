@@ -89,8 +89,9 @@ public class ShowsListFragment extends Fragment implements ShowsListView, ShowsL
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int count = layoutManager.getItemCount();
-                int lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition();
-                if (!lastPage && !srlShows.isRefreshing() && lastVisibleItem == count - 1) {
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                // one row before the end of the grid
+                if (!lastPage && !srlShows.isRefreshing() && lastVisibleItem >= count - 3) {
                     loadShows();
                 }
             }
